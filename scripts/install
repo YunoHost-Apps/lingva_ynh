@@ -83,6 +83,9 @@ ynh_exec_warn_less yarn --cwd "$install_dir" install
 yarn --cwd "$install_dir" run next telemetry disable
 ynh_exec_warn_less yarn --cwd "$install_dir" build
 
+chown -R $app:$app "$install_dir/node_modules"
+chown -R $app:$app "$install_dir/.next"
+
 #=================================================
 # GENERIC FINALIZATION
 #=================================================

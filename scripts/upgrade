@@ -93,6 +93,9 @@ ynh_use_nodejs
 ynh_exec_warn_less yarn --cwd "$install_dir" install
 ynh_exec_warn_less yarn --cwd "$install_dir" build
 
+chown -R $app:$app "$install_dir/node_modules"
+chown -R $app:$app "$install_dir/.next"
+
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================

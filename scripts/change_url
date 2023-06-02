@@ -65,6 +65,11 @@ then
 	ynh_replace_string --match_string="href=\"$old_next_path/manifest" --replace_string="href=\"$new_next_path/manifest" --target_file="$install_dir/components/CustomHead.tsx"
 fi
 
+chown $app:www-data "$install_dir/public/manifest.json"
+chown $app:www-data "$install_dir/next.config.js"
+chmod 664 "$install_dir/public/manifest.json"
+chmod 664 "$install_dir/next.config.js"
+
 #=================================================
 # REBUILDING AND INSTALL THE APP
 #=================================================
@@ -72,6 +77,8 @@ ynh_script_progression --message="Rebuilding the app..." --weight=1
 
 ynh_use_nodejs
 ynh_exec_warn_less yarn --cwd "$install_dir" build
+
+chown -R $app:$app "$install_dir/.next"
 
 #=================================================
 # GENERIC FINALISATION

@@ -1,22 +1,14 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
-
-upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping a systemd service..." --weight=1
+ynh_script_progression "Stopping $app's systemd service..."
 
-ynh_systemd_action --service_name=$app --action="stop" --log_path="/var/log/$app/$app.log"
+ynh_systemctl --service=$app --action="stop"
 
 #=================================================
 # "REBUILD" THE APP (DEPLOY NEW SOURCES, RERUN NPM BUILD...)
@@ -24,42 +16,42 @@ ynh_systemd_action --service_name=$app --action="stop" --log_path="/var/log/$app
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
+# FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
+if ynh_app_upstream_version_changed
 then
-	ynh_script_progression --message="Upgrading source files..." --weight=1
+	ynh_script_progression "Upgrading source files..."
 
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source --dest_dir="$install_dir"
 fi
 
-chown -R $app:www-data "$install_dir"
-
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
+ynh_script_progression "Upgrading system configurations related to $app..."
 
 # Create a dedicated NGINX config using the conf/nginx.conf template
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 #=================================================
 # RECONFIGURE THE APP (UPDATE CONF, APPLY MIGRATIONS...)
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Updating a configuration file..." --weight=1
+ynh_script_progression "Updating configuration..."
 
-ynh_add_config --template=".env.local" --destination="$install_dir/.env.local"
+ynh_config_add --template=".env.local" --destination="$install_dir/.env.local"
 
-chmod 400 "$install_dir/.env.local"
-chown $app:$app "$install_dir/.env.local"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 400 "$install_dir/.env.local"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app:$app "$install_dir/.env.local"
 
 #=================================================
 # CONFIGURATION FOR SUBPATH
 #=================================================
 
-ynh_secure_remove --file="$install_dir/public/manifest.json"
-ynh_secure_remove --file="$install_dir/next.config.js"
+ynh_safe_rm "$install_dir/public/manifest.json"
+ynh_safe_rm "$install_dir/next.config.js"
 
 if [ "$path" = "/" ]; then
 	next_path=""
@@ -67,31 +59,30 @@ else
 	next_path=$path
 fi
 
-ynh_add_config --template="manifest.json" --destination="$install_dir/public/manifest.json"
+ynh_config_add --template="manifest.json" --destination="$install_dir/public/manifest.json"
 
-ynh_add_config --template="next.config.js" --destination="$install_dir/next.config.js"
+ynh_config_add --template="next.config.js" --destination="$install_dir/next.config.js"
 
-ynh_replace_string --match_string="src={useColorModeValue(\"/banner_light.svg\", \"/banner_dark.svg\")}" --replace_string="src={useColorModeValue(\"$next_path/banner_light.svg\", \"$next_path/banner_dark.svg\")}" --target_file="$install_dir/components/Header.tsx"
+ynh_replace --match="src={useColorModeValue(\"/banner_light.svg\", \"/banner_dark.svg\")}" --replace="src={useColorModeValue(\"$next_path/banner_light.svg\", \"$next_path/banner_dark.svg\")}" --file="$install_dir/components/Header.tsx"
 
-ynh_replace_string --match_string="href=\"/favicon" --replace_string="href=\"$next_path/favicon" --target_file="$install_dir/components/CustomHead.tsx"
+ynh_replace --match="href=\"/favicon" --replace="href=\"$next_path/favicon" --file="$install_dir/components/CustomHead.tsx"
 
-ynh_replace_string --match_string="href=\"/apple" --replace_string="href=\"$next_path/apple" --target_file="$install_dir/components/CustomHead.tsx"
+ynh_replace --match="href=\"/apple" --replace="href=\"$next_path/apple" --file="$install_dir/components/CustomHead.tsx"
 
-ynh_replace_string --match_string="href=\"/manifest" --replace_string="href=\"$next_path/manifest" --target_file="$install_dir/components/CustomHead.tsx"
+ynh_replace --match="href=\"/manifest" --replace="href=\"$next_path/manifest" --file="$install_dir/components/CustomHead.tsx"
 
 chown $app:www-data "$install_dir/public/manifest.json"
-chown $app:www-data "$install_dir/next.config.js"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app:www-data "$install_dir/next.config.js"
 chmod 664 "$install_dir/public/manifest.json"
-chmod 664 "$install_dir/next.config.js"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 664 "$install_dir/next.config.js"
 
 #=================================================
 # REBUILD AND INSTALL THE APP
 #=================================================
-ynh_script_progression --message="Rebuilding the app..." --weight=1
+ynh_script_progression "Rebuilding the app..."
 
-ynh_use_nodejs
-ynh_exec_warn_less yarn --cwd "$install_dir" install
-ynh_exec_warn_less yarn --cwd "$install_dir" build
+ynh_hide_warnings yarn --cwd "$install_dir" install
+ynh_hide_warnings yarn --cwd "$install_dir" build
 
 chown -R $app:$app "$install_dir/node_modules"
 chown -R $app:$app "$install_dir/.next"
@@ -99,17 +90,17 @@ chown -R $app:$app "$install_dir/.next"
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression "Starting $app's systemd service..."
 
 # Create a dedicated systemd config
-ynh_add_systemd_config
+ynh_config_add_systemd
 
 yunohost service add $app --description="alternative to google translate" --log="/var/log/$app/$app.log"
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemctl --service=$app --action="start"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --last
+ynh_script_progression "Upgrade of $app completed"

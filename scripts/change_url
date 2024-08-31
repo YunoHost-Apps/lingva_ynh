@@ -1,39 +1,31 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC STARTING
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# STANDARD MODIFICATIONS
-#=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping a systemd service..." --weight=1
+ynh_script_progression "Stopping $app's systemd service..."
 
-ynh_systemd_action --service_name=$app --action="stop" --log_path="/var/log/$app/$app.log"
+ynh_systemctl --service=$app --action="stop"
 
 #=================================================
 # MODIFY URL IN NGINX CONF
 #=================================================
-ynh_script_progression --message="Updating NGINX web server configuration..." --weight=1
+ynh_script_progression "Updating NGINX web server configuration..."
 
-ynh_change_url_nginx_config
+ynh_config_change_url_nginx
 
 #=================================================
 # CHANGE THE URL IN .ENV.LOCAL AND REBUILD THE APP
 #=================================================
 
-ynh_script_progression --message="Setting the new URL..." --weight=1
+ynh_script_progression "Setting the new URL..."
 
 if [ $change_domain -eq 1 ]
 then
-	ynh_replace_string --match_string="NEXT_PUBLIC_SITE_DOMAIN=$old_domain$old_path" --replace_string="NEXT_PUBLIC_SITE_DOMAIN=$new_domain$new_path" --target_file="$install_dir/.env.local"
+	ynh_replace --match="NEXT_PUBLIC_SITE_DOMAIN=$old_domain$old_path" --replace="NEXT_PUBLIC_SITE_DOMAIN=$new_domain$new_path" --file="$install_dir/.env.local"
 fi
 
 if [ $change_path -eq 1 ]
@@ -52,45 +44,42 @@ then
 		next_path=$new_path
 	fi
 
-	ynh_add_config --template="manifest.json" --destination="$install_dir/public/manifest.json"
+	ynh_config_add --template="manifest.json" --destination="$install_dir/public/manifest.json"
 
-	ynh_add_config --template="next.config.js" --destination="$install_dir/next.config.js"
+	ynh_config_add --template="next.config.js" --destination="$install_dir/next.config.js"
 
-	ynh_replace_string --match_string="src={useColorModeValue(\"$old_next_path/banner_light.svg\", \"$old_next_path/banner_dark.svg\")}" --replace_string="src={useColorModeValue(\"$new_next_path/banner_light.svg\", \"$new_next_path/banner_dark.svg\")}" --target_file="$install_dir/components/Header.tsx"
+	ynh_replace --match="src={useColorModeValue(\"$old_next_path/banner_light.svg\", \"$old_next_path/banner_dark.svg\")}" --replace="src={useColorModeValue(\"$new_next_path/banner_light.svg\", \"$new_next_path/banner_dark.svg\")}" --file="$install_dir/components/Header.tsx"
 
-	ynh_replace_string --match_string="href=\"$old_next_path/favicon" --replace_string="href=\"$new_next_path/favicon" --target_file="$install_dir/components/CustomHead.tsx"
+	ynh_replace --match="href=\"$old_next_path/favicon" --replace="href=\"$new_next_path/favicon" --file="$install_dir/components/CustomHead.tsx"
 
-	ynh_replace_string --match_string="href=\"$old_next_path/apple" --replace_string="href=\"$new_next_path/apple" --target_file="$install_dir/components/CustomHead.tsx"
+	ynh_replace --match="href=\"$old_next_path/apple" --replace="href=\"$new_next_path/apple" --file="$install_dir/components/CustomHead.tsx"
 
-	ynh_replace_string --match_string="href=\"$old_next_path/manifest" --replace_string="href=\"$new_next_path/manifest" --target_file="$install_dir/components/CustomHead.tsx"
+	ynh_replace --match="href=\"$old_next_path/manifest" --replace="href=\"$new_next_path/manifest" --file="$install_dir/components/CustomHead.tsx"
 fi
 
 chown $app:www-data "$install_dir/public/manifest.json"
-chown $app:www-data "$install_dir/next.config.js"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app:www-data "$install_dir/next.config.js"
 chmod 664 "$install_dir/public/manifest.json"
-chmod 664 "$install_dir/next.config.js"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 664 "$install_dir/next.config.js"
 
 #=================================================
 # REBUILDING AND INSTALL THE APP
 #=================================================
-ynh_script_progression --message="Rebuilding the app..." --weight=1
+ynh_script_progression "Rebuilding the app..."
 
-ynh_use_nodejs
-ynh_exec_warn_less yarn --cwd "$install_dir" build
+ynh_hide_warnings yarn --cwd "$install_dir" build
 
 chown -R $app:$app "$install_dir/.next"
 
 #=================================================
-# GENERIC FINALISATION
-#=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemctl --service=$app --action="start"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Change of URL completed for $app" --last
+ynh_script_progression "Change of URL completed for $app"

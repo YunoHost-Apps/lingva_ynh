@@ -5,7 +5,9 @@ No se debe editar a mano.
 
 # Lingva Translate para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/lingva.svg)](https://dash.yunohost.org/appci/app/lingva) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/lingva.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/lingva.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/lingva)](https://ci-apps.yunohost.org/ci/apps/lingva/)
+![Estado funcional](https://apps.yunohost.org/badge/state/lingva)
+![Estado En Mantención](https://apps.yunohost.org/badge/maintained/lingva)
 
 [![Instalar Lingva Translate con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=lingva)
 
@@ -18,7 +20,8 @@ No se debe editar a mano.
 
 Alternative front-end for Google Translate, serving as a Free and Open Source translator with over a hundred languages available.
 
-**Versión actual:** 2023.1.13~ynh2
+
+**Versión actual:** 2023.1.13~ynh3
 
 **Demo:** <https://lingva.ml>
 
@@ -38,7 +41,7 @@ Alternative front-end for Google Translate, serving as a Free and Open Source tr
 
 ## Información para desarrolladores
 
-Por favor enviar sus correcciones a la [`branch testing`](https://github.com/YunoHost-Apps/lingva_ynh/tree/testing
+Por favor enviar sus correcciones a la [rama `testing`](https://github.com/YunoHost-Apps/lingva_ynh/tree/testing).
 
 Para probar la rama `testing`, sigue asÍ:
 

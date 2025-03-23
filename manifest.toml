@@ -1,3 +1,5 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
 packaging_format = 2
 
 id = "lingva"
@@ -5,7 +7,7 @@ name = "Lingva Translate"
 description.en = "Alternative front-end for Google Translate"
 description.id = "Antarmuka alternatif untuk Google Translate"
 
-version = "2023.1.13~ynh2"
+version = "2023.1.13~ynh3"
 
 maintainers = ["the7thNightmare"]
 
@@ -18,8 +20,11 @@ code = "https://github.com/thedaviddelta/lingva-translate"
 yunohost = ">= 11.1.19"
 architectures = "all"
 multi_instance = true
+
 ldap = false
+
 sso = false
+
 disk = "300M"
 ram.build = "300M"
 ram.runtime = "50M"
@@ -39,11 +44,11 @@ ram.runtime = "50M"
 [resources]
     [resources.sources]
 
-        [resources.sources.main]
-        url = "https://github.com/thedaviddelta/lingva-translate/archive/0190ea5da9fbccba51e82184ca855c4ef5728fc7.tar.gz"
-        sha256 = "157657aba6b2c3866105707560199dadcf7268514320c81a4a4a4b10c17333fc"
-        in_subdir = true
-        autoupdate.strategy = "latest_github_commit"
+    [resources.sources.main]
+    url = "https://github.com/thedaviddelta/lingva-translate/archive/0190ea5da9fbccba51e82184ca855c4ef5728fc7.tar.gz"
+    sha256 = "157657aba6b2c3866105707560199dadcf7268514320c81a4a4a4b10c17333fc"
+    in_subdir = true
+    autoupdate.strategy = "latest_github_commit"
 
     [resources.system_user]
 

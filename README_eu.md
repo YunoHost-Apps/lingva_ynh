@@ -5,7 +5,9 @@ EZ editatu eskuz.
 
 # Lingva Translate YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/lingva.svg)](https://dash.yunohost.org/appci/app/lingva) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/lingva.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/lingva.maintain.svg)
+[![Integrazio maila](https://apps.yunohost.org/badge/integration/lingva)](https://ci-apps.yunohost.org/ci/apps/lingva/)
+![Funtzionamendu egoera](https://apps.yunohost.org/badge/state/lingva)
+![Mantentze egoera](https://apps.yunohost.org/badge/maintained/lingva)
 
 [![Instalatu Lingva Translate YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=lingva)
 
@@ -18,7 +20,8 @@ EZ editatu eskuz.
 
 Alternative front-end for Google Translate, serving as a Free and Open Source translator with over a hundred languages available.
 
-**Paketatutako bertsioa:** 2023.1.13~ynh2
+
+**Paketatutako bertsioa:** 2023.1.13~ynh3
 
 **Demoa:** <https://lingva.ml>
 

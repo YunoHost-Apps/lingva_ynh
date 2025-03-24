@@ -5,7 +5,9 @@ Il NE doit PAS être modifié à la main.
 
 # Lingva Translate pour YunoHost
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/lingva.svg)](https://dash.yunohost.org/appci/app/lingva) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/lingva.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/lingva.maintain.svg)
+[![Niveau d’intégration](https://apps.yunohost.org/badge/integration/lingva)](https://ci-apps.yunohost.org/ci/apps/lingva/)
+![Statut du fonctionnement](https://apps.yunohost.org/badge/state/lingva)
+![Statut de maintenance](https://apps.yunohost.org/badge/maintained/lingva)
 
 [![Installer Lingva Translate avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=lingva)
 
@@ -18,7 +20,8 @@ Il NE doit PAS être modifié à la main.
 
 Lingva est un front-end alternatif à Google Translate, servant de traducteur gratuit et open source avec plus d'une centaine de langues disponibles.
 
-**Version incluse :** 2023.1.13~ynh2
+
+**Version incluse :** 2023.1.13~ynh3
 
 **Démo :** <https://lingva.ml>
 

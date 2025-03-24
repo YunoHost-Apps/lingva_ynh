@@ -5,7 +5,9 @@
 
 # YunoHost 上的 Lingva Translate
 
-[![集成程度](https://dash.yunohost.org/integration/lingva.svg)](https://dash.yunohost.org/appci/app/lingva) ![工作状态](https://ci-apps.yunohost.org/ci/badges/lingva.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/lingva.maintain.svg)
+[![集成程度](https://apps.yunohost.org/badge/integration/lingva)](https://ci-apps.yunohost.org/ci/apps/lingva/)
+![工作状态](https://apps.yunohost.org/badge/state/lingva)
+![维护状态](https://apps.yunohost.org/badge/maintained/lingva)
 
 [![使用 YunoHost 安装 Lingva Translate](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=lingva)
 
@@ -18,7 +20,8 @@
 
 Alternative front-end for Google Translate, serving as a Free and Open Source translator with over a hundred languages available.
 
-**分发版本：** 2023.1.13~ynh2
+
+**分发版本：** 2023.1.13~ynh3
 
 **演示：** <https://lingva.ml>
 

@@ -6,7 +6,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
+
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -76,8 +76,8 @@ chmod 664 "$install_dir/next.config.js"
 #=================================================
 ynh_script_progression --message="Building the app..." --weight=1
 
-ynh_install_nodejs --nodejs_version=$nodejs_version
-ynh_use_nodejs
+#REMOVEME? ynh_install_nodejs --#REMOVEME? nodejs_version=$nodejs_version
+#REMOVEME? ynh_use_nodejs
 yarn config set enableTelemetry 0
 ynh_exec_warn_less yarn --cwd "$install_dir" install
 yarn --cwd "$install_dir" run next telemetry disable

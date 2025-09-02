@@ -6,7 +6,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
+
 source /usr/share/yunohost/helpers
 
 upgrade_type=$(ynh_check_app_version_changed)
@@ -89,7 +89,7 @@ chmod 664 "$install_dir/next.config.js"
 #=================================================
 ynh_script_progression --message="Rebuilding the app..." --weight=1
 
-ynh_use_nodejs
+#REMOVEME? ynh_use_nodejs
 ynh_exec_warn_less yarn --cwd "$install_dir" install
 ynh_exec_warn_less yarn --cwd "$install_dir" build
 

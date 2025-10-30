@@ -65,4 +65,4 @@ ram.runtime = "50M"
     packages = "yarn"
 
     [resources.nodejs]
-    version = 18
+    version = "18"

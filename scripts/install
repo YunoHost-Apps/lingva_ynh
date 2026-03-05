@@ -64,10 +64,13 @@ chmod 664 "$install_dir/next.config.js"
 #=================================================
 ynh_script_progression "Building the app..."
 
-yarn config set enableTelemetry 0
-ynh_hide_warnings yarn --cwd "$install_dir" install
-yarn --cwd "$install_dir" run next telemetry disable
-ynh_hide_warnings yarn --cwd "$install_dir" build
+pushd "$install_dir"
+	ynh_hide_warnings corepack enable && corepack prepare yarn@4.13.0 --activate
+	ynh_hide_warnings ynh_exec_as_app yarn config set enableTelemetry 0
+	ynh_hide_warnings ynh_exec_as_app yarn install
+	ynh_hide_warnings ynh_exec_as_app yarn run next telemetry disable
+	ynh_hide_warnings ynh_exec_as_app yarn build
+popd
 
 chown -R $app:$app "$install_dir/node_modules"
 chown -R $app:$app "$install_dir/.next"

@@ -74,9 +74,7 @@ ynh_script_progression "Rebuilding the app..."
 
 pushd "$install_dir"
 	ynh_hide_warnings corepack enable && corepack prepare yarn@4.13.0 --activate
-	ynh_hide_warnings ynh_exec_as_app yarn config set enableTelemetry 0
 	ynh_hide_warnings ynh_exec_as_app yarn install
-	ynh_hide_warnings ynh_exec_as_app yarn run next telemetry disable
 	ynh_hide_warnings ynh_exec_as_app yarn build
 popd
 
